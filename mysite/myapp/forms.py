@@ -16,30 +16,42 @@ def must_be_unique(value):
         raise forms.ValidationError("Email already exists")
     return value
 
-
-class SuggestionForm(forms.Form):
-    suggestion_field = forms.CharField(
-                label='Suggestion',
-                max_length=240,
-                validators=[validate_unicode_slug, must_be_caps],
-            )
-    image = forms.ImageField(
-                label="Image File",
-                required=False,
-            )
-    image_description = forms.CharField(
-                label="Image Description",
-                required=False,
-            )
-
+class StatusForm(forms.Form):
+    status_field = forms.CharField(label ='Status', max_length=240,)
+    profilepic = forms.ImageField(label='Image File', required=False,)
+    image = forms.ImageField(label='Image File', required=False,)
+    
     def save(self, request):
-        suggestion_instance = models.SuggestionModel()
-        suggestion_instance.suggestion = self.cleaned_data["suggestion_field"]
-        suggestion_instance.image = self.cleaned_data["image"]
-        suggestion_instance.image_description = self.cleaned_data["image_description"]
-        suggestion_instance.author = request.user
-        suggestion_instance.save()
-        return suggestion_instance
+        status_instance = models.ProfileModel()
+        status_instance.profilepic = self.cleaned_data["image"]
+        status_instance.profile_status = self.cleaned_data["status_field"]
+        status_instance.image = self.cleaned_data["image"]
+        status_instance.author = request.user
+        status_instance.save()
+        return status_instance
+
+#class SuggestionForm(forms.Form):
+#    suggestion_field = forms.CharField(
+#                label='Suggestion',
+#                max_length=240,
+#            )
+#    image = forms.ImageField(
+#                label="Image File",
+#                required=False,
+#            )
+#    image_description = forms.CharField(
+#                label="Image Description",
+#                required=False,
+#            )
+#
+#    def save(self, request):
+#        suggestion_instance = models.SuggestionModel()
+#        suggestion_instance.suggestion = self.cleaned_data["suggestion_field"]
+#        suggestion_instance.image = self.cleaned_data["image"]
+#        suggestion_instance.image_description = self.cleaned_data["image_description"]
+#        suggestion_instance.author = request.user
+#        suggestion_instance.save()
+#        return suggestion_instance
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
@@ -71,12 +83,12 @@ class Comment_Form(forms.Form):
             # validators=[validate_unicode_slug, must_be_caps],
             )
 
-    def save(self, request, sugg_id):
-        suggestion_instance = models.SuggestionModel.objects.get(id=sugg_id)
+    def save(self, request, stat_id):
+        status_instance = models.ProfileModel.objects.get(id=stat_id)
         comment_instance = models.CommentModel()
         comment_instance.comment = self.cleaned_data["comment_field"]
         comment_instance.author = request.user
-        comment_instance.suggestion = suggestion_instance
+        comment_instance.profile_status = status_instance
         comment_instance.save()
         return comment_instance
 

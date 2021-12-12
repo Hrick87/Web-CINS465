@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title%}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/app.min.css' %}">
     {% block css %}
     {% endblock %}
@@ -16,9 +16,11 @@
     <div class="top-bar">
         <div class="top-bar-left">
           <ul class="menu">
-            <li class="menu-text">Suggestion Site</li>
             {% if request.user.is_authenticated %}
+            <li class="menu-text">MyBook</li>
             <li><a href="/logout/">Logout</a></li>
+	    <li><a href="/chat/">Chat Room</a></li>
+	    <li><a href="/">Explore</a></li>
             {% else %}
             <li><a href="/login/">Login</a></li>
             {% endif %}
@@ -27,7 +29,7 @@
         <div class="top-bar-right">
           <ul class="menu">
             {% if request.user.is_authenticated %}
-            <li><a href="/suggestion/">Add Suggestion</a></li>
+	    <li><a href="/profile/{{request.user.username}}/">Your Profile</a></li>
             <li>Hi {{ request.user.username }} </li>
             {% else %}
             <li>Welcome Guest</li>

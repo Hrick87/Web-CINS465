@@ -7,17 +7,36 @@ services:
     build: .
     volumes:
        - .:/code
+    links:
+       - redis:redis
     expose:
        - 8000
     user: 1001:1002 ## needed for linux
     command: python /code/mysite/manage.py runserver 0.0.0.0:8000
+    #command: daphne -b 0.0.0.0 -p 8000 mysite.mysite.asgi:application
+  redis:
+    image: redis:latest
+    expose:
+       - 6379
 
   nginx:
    restart: always
    build: ./nginx/
+   volumes:  
+      - ./mysite/static/:/static
    depends_on:
       - web
    ports:
       - 80:80
+      - 443:443
    links:
       - web:web
+
+   # networking for the Redis container
+   #networks:
+   # node_net:
+   #ipam:
+   #  driver: default
+   #  config:
+   #    - subnet: 172.28.0.0/16
+

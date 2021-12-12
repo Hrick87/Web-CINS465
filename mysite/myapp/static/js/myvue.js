@@ -1,16 +1,16 @@
 const ListRendering = {
     data() {
         return {
-            suggestions: []
+            profile_status: []
         }
     },
     mounted() {
         //get request
         //use results
-        axios.get('/suggestions/')
+        axios.get('/profile_status/')
             .then(function (response) {
                 // handle success
-                myapp.suggestions = response.data.suggestions;
+                myapp.profile_status = response.data.profile_status;
                 console.log(response);
             })
             .catch(function (error) {
@@ -18,10 +18,10 @@ const ListRendering = {
                 console.log(error);
             })
         setInterval(()=>{
-            axios.get('/suggestions/')
+            axios.get('/profile_status/')
             .then(function (response) {
                 // handle success
-                myapp.suggestions = response.data.suggestions;
+                myapp.profile_status = response.data.profile_status;
                 console.log(response);
             })
             .catch(function (error) {

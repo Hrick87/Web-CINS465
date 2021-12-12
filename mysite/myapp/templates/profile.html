@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/app2.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid-x grid-padding-x">
+	<div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
+		<h3 class="text-center">New Status</h3>
+		<form action="/profile/" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ form }}
+			<input type="submit" class="button expanded" value="Post" />
+		</form>
+	</div>
+</div>
+<div id="list-rendering">
+	<div class="grid-container">
+		<div class="grid-x grid-padding-x">
+			<div class="large-12 medium-12 small-12 cell" v-for="stat in profile_status">
+				{% verbatim %}
+				<div class="card-info">
+					<div class="card-info-content">
+						<h3 class="lead">{{ stat.profile_status }}</h3>
+						<img v-bind:src="stat.image" v:alt="stat.image_desc"/>
+						</br>
+						{{ stat.author }} - {{ stat.date }}
+						
+						<div class="grid-container">
+							<div class="grid-x grid-padding-x">
+								<div class="large-11 medium-11 small-11 large-offset-1 medium-offset-1 small-offset-1 cell" v-for="comm in stat.comments">
+									<div class="card-info">
+										<div class="card-info-content">
+											<h3 class="lead">{{ comm.comment }}</h3>
+											{{ comm.author }} - {{ comm.date }}
+										</div>
+									</div>
+								</div>
+								<div class="large-11 medium-11 small-11 large-offset-1 medium-offset-1 small-offset-1 cell">
+									{% endverbatim %}
+									{% if request.user.is_authenticated %}
+									<a class="button" v-bind:href="'comment/'+stat.id+'/'">comment</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'js/myvue.js' %}"></script>
+
+{% endblock %}
