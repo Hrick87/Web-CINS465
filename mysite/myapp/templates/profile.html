@@ -8,10 +8,35 @@
 {% endblock %}
 
 {% block content %}
+
+<!--<div id="list-rendering">
+	<div class="grid-container">
+		<div class="grid-x grid-padding-x">
+			<div class="large-12 medium-12 small-12 cell" v-for="info in profile_info">
+				{% verbatim %}
+				<div class="card-info">
+					<div class="card-info-content">
+						<h3 class="lead">{{ info.profile_info }}</h3>
+						<img v-bind:src="info.image" v:alt="info.image_desc"/>
+						</br>
+						{{ info.bio }} - {{ info.location }}
+						{% endverbatim %}
+						<ul><a class="button" href="/editprofile/">edit</a></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+-->
+
+
+
+
 <div class="grid-x grid-padding-x">
 	<div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
 		<h3 class="text-center">New Status</h3>
-		<form action="/profile/" method="post" enctype="multipart/form-data">
+		<form action="." method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			{{ form }}
 			<input type="submit" class="button expanded" value="Post" />
@@ -28,8 +53,9 @@
 						<h3 class="lead">{{ stat.profile_status }}</h3>
 						<img v-bind:src="stat.image" v:alt="stat.image_desc"/>
 						</br>
+						<center><ul>{{stat.image}}</ul></center>
 						{{ stat.author }} - {{ stat.date }}
-						
+
 						<div class="grid-container">
 							<div class="grid-x grid-padding-x">
 								<div class="large-11 medium-11 small-11 large-offset-1 medium-offset-1 small-offset-1 cell" v-for="comm in stat.comments">

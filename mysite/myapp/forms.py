@@ -1,7 +1,8 @@
 from django import forms
-
+from django.forms import ModelForm
 from django.core.validators import validate_unicode_slug
 from . import models
+from myapp.models import Profile
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User as auth_user
 
@@ -16,14 +17,17 @@ def must_be_unique(value):
         raise forms.ValidationError("Email already exists")
     return value
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 class StatusForm(forms.Form):
     status_field = forms.CharField(label ='Status', max_length=240,)
-    profilepic = forms.ImageField(label='Image File', required=False,)
     image = forms.ImageField(label='Image File', required=False,)
     
     def save(self, request):
         status_instance = models.ProfileModel()
-        status_instance.profilepic = self.cleaned_data["image"]
         status_instance.profile_status = self.cleaned_data["status_field"]
         status_instance.image = self.cleaned_data["image"]
         status_instance.author = request.user

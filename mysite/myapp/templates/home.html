@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/searchbar.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<center><h1>Explore page</h1></center>
+<body>
+	<center>Leave search blank to see all users</center>
+<form action="{% url 'search_results' %}" method="get" style="margin:auto;max-width:300px">
+	<input name="q" type="text" placeholder="Search...">
+	<button type="submit"><i class="fa fa-search"></i></button>
+</form>
+</body>
+
+
+{% endblock %}

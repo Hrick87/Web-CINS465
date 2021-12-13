@@ -1,31 +1,91 @@
+from django import forms
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db import transaction
+from django.views.generic import TemplateView, ListView
+from django.db.models import Q
 
 import random
 from datetime import datetime, timezone
 
 from . import models
 from . import forms
+from myapp.forms import UserProfileForm
+from myapp.models import Profile
 
 # Create your views here.
-def index(request):
-#    if request.method == "POST":
-#        form = forms.SuggestionForm(request.POST)
-#        if form.is_valid() and request.user.is_authenticated:
-#            form.save(request)
-#            form = forms.SuggestionForm()
+
+#HomePageView and Search ResultsView code from: https://learndjango.com/tutorials/django-search-tutorial
+
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+
+class SearchResultsView(ListView):
+    model = Profile
+    template_name = 'search_results.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = Profile.objects.filter(Q(user__username__icontains=query) | Q(location__icontains=query))
+        return object_list
+
+@login_required
+def update_profile(request):
+    userprofile_form = UserProfileForm(request.POST, request.FILES, instance = Profile.objects.get(user=request.user))
+    if request.method == 'POST':
+        if userprofile_form.is_valid():
+            userprofile_form.save()     
+            return redirect('/profile/%s/'%request.user.username)  
+
+    return render(request, 'editprofile.html', context={'userprofile_form': userprofile_form})
+
+#def profile_info_view(request):
+#    profile_info_objects = models.Profile.objects.all()
+#    profile_info_list = {}
+#    profile_info_list["profile_info"] = []
+#    for info in profile_info_objects:
+#        temp_info = {}
+#        temp_info["user"] = info.user
+#        temp_info["bio"] = info.bio
+#        temp_info["location"] = info.location
+#        if info.image:
+#            info_stat["profilepic"] = info.profilepic.url
+#            info_stat["image_desc"] = info.image_description
+#        else:
+#            info_stat["profilepic"] = ""
+#            info_stat["image_desc"] = ""
+#        profile_info_list["profile_info"] += [temp_info]
+#
+#    return JsonResponse(profile_info_list)
+
+
+#@login_required
+#@transaction.atomic
+#def update_profile(request):
+#    if request.method == 'POST':
+#        user_form = UserForm(request.POST, instance=request.user)
+#        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+#        if user_form.is_valid() and profile_form.is_valid():
+#            user_form.save()
+#            profile_form.save()
+#            messages.success(request, _('Your profile was successfully updated!'))
+#            return redirect('settings:profile')
+#        else:
+#            messages.error(request, _('Please correct the error below.'))
 #    else:
-#        form = forms.SuggestionForm()
+#        user_form = UserForm(instance=request.user)
+#        profile_form = ProfileForm(instance=request.user.profile)
 #
 #    context = {
-#        "title": "MyBook",
-#        "body":"Hello World",
-#       "form": form
+#        'user_form': user_form,
+#        'profile_form': profile_form
 #    }
-    return render(request,"index.html")
+#
+#    return render(request, 'profile.html', context=context)
+
 
 def profile_view(request, username):
     username = User.objects.get(username=username)

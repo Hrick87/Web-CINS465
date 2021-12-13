@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Search Results</h1>
+
+<ul>
+	{% for Profile in object_list %}
+	<ul>
+		{{ Profile.user }}
+	</ul>
+	<ul>
+		{{ Profile.profilepic }}
+	</ul>
+	<br>
+	{% endfor %}
+</ul>
+<a class="button" href="/">New Search</a>
+
+{% endblock %}
