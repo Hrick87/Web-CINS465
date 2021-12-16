@@ -43,7 +43,7 @@ def update_profile(request):
     return render(request, 'editprofile.html', context={'userprofile_form': userprofile_form})
 
 def profile_info_view(request):
-    profile_info_objects = models.Profile.objects.all()
+    profile_info_objects = models.Profile.objects.filter(user=request.user)
     profile_info_list = {}
     profile_info_list["profile_info"] = []
     for info in profile_info_objects:
@@ -90,7 +90,9 @@ def profile_info_view(request):
 
 def profile_view(request, username):
     username = User.objects.get(username=username)
-    profile_list = Profile.objects.all()
+    profile_list = Profile.objects.filter(user=request.user)
+    #if request.user.is_authenticated():
+    #    status_by_user = ProfileModel.objects.filter(user=request.user)
     if request.method == 'POST':
         form = forms.StatusForm(request.POST, request.FILES)
         if form.is_valid() and request.user.is_authenticated:
@@ -166,7 +168,7 @@ def register_view(request):
     return render(request,"registration/register.html", context=context)
 
 def profile_status_view(request):
-    profile_status_objects = models.ProfileModel.objects.all().order_by("-published_on")
+    profile_status_objects = models.ProfileModel.objects.filter(author=request.user).order_by("-published_on")
     profile_status_list = {}
     profile_status_list["profile_status"] = []
     for stat in profile_status_objects:
