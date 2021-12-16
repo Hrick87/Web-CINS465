@@ -5,7 +5,7 @@
 <ul>
 	{% for Profile in object_list %}
 	<ul>
-		{{ Profile.user }}
+		<a href="/profile/{{ Profile.user }}">{{ Profile.user }}</a>
 	</ul>
 	<ul>
 		{% if Profile.profilepic %}
