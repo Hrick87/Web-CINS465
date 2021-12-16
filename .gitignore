@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Stupid macOS stuff
+__MACOSX
+
 # Distribution / packaging
 .Python
 build/
@@ -237,6 +240,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-#extra stuff
+# Extra Stuff
 
 media/
+nginx/ssl/
+cins465-cloudkey.json

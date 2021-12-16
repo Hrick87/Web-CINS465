@@ -8,7 +8,9 @@
 		{{ Profile.user }}
 	</ul>
 	<ul>
-		{{ Profile.profilepic }}
+		{% if Profile.profilepic %}
+			<img class = "imgView" src= "{{ Profile.profilepic.url }}" alt="profile pic"</img>
+		{% endif %}
 	</ul>
 	<br>
 	{% endfor %}

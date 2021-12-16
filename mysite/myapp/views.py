@@ -42,24 +42,25 @@ def update_profile(request):
 
     return render(request, 'editprofile.html', context={'userprofile_form': userprofile_form})
 
-#def profile_info_view(request):
-#    profile_info_objects = models.Profile.objects.all()
-#    profile_info_list = {}
-#    profile_info_list["profile_info"] = []
-#    for info in profile_info_objects:
-#        temp_info = {}
-#        temp_info["user"] = info.user
-#        temp_info["bio"] = info.bio
-#        temp_info["location"] = info.location
-#        if info.image:
-#            info_stat["profilepic"] = info.profilepic.url
-#            info_stat["image_desc"] = info.image_description
-#        else:
-#            info_stat["profilepic"] = ""
-#            info_stat["image_desc"] = ""
-#        profile_info_list["profile_info"] += [temp_info]
-#
-#    return JsonResponse(profile_info_list)
+def profile_info_view(request):
+    profile_info_objects = models.Profile.objects.all()
+    profile_info_list = {}
+    profile_info_list["profile_info"] = []
+    for info in profile_info_objects:
+        temp_info = {}
+        temp_info["profile_info"] = info.profile_info
+        temp_info["user"] = info.user
+        temp_info["bio"] = info.bio
+        temp_info["location"] = info.location
+        if info.image:
+            info_stat["profilepic"] = info.profilepic.url
+            info_stat["image_desc"] = info.image_description
+        else:
+            info_stat["profilepic"] = ""
+            info_stat["image_desc"] = ""
+        profile_info_list["profile_info"] += [temp_info]
+
+    return JsonResponse(profile_info_list)
 
 
 #@login_required
@@ -89,6 +90,7 @@ def update_profile(request):
 
 def profile_view(request, username):
     username = User.objects.get(username=username)
+    profile_list = Profile.objects.all()
     if request.method == 'POST':
         form = forms.StatusForm(request.POST, request.FILES)
         if form.is_valid() and request.user.is_authenticated:
@@ -97,7 +99,7 @@ def profile_view(request, username):
     else:
         form = forms.StatusForm()
 
-    context = { 'title': "Your Profile", 'form': form }
+    context = { 'title': "Your Profile", 'form': form, 'profile_list': profile_list }
 
     return render(request, "profile.html", context=context)
 
@@ -178,10 +180,10 @@ def profile_status_view(request):
         temp_stat["date"] = stat.published_on.strftime("%Y-%m-%d")
         if stat.image:
             temp_stat["image"] = stat.image.url
-            temp_stat["image_desc"] = stat.image_description
+            #temp_stat["image_desc"] = stat.image_description
         else:
             temp_stat["image"] = ""
-            temp_stat["image_desc"] = ""
+            #temp_stat["image_desc"] = ""
        
         temp_stat["comments"] = []
         for comm in comment_objects:
